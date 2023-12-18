@@ -30,7 +30,10 @@ class UtangBarangController extends Controller
             $utbar = UtangBarang::find($id);
             // dd($data);
             $utbarD = UtangBarangDetail::where('status', 1)->orderBy('id', 'desc')->get();
+            $disabled = true;
+            $btn = UtangBarangDetail::latest()->first();
+            $totalUtangBarang = UtangBarangDetail::where('status', 1)->sum('nominal_utang');
             
-            return view('admin.utang_barang.show', compact('utbar', 'utbarD'));
+            return view('admin.utang_barang.show', compact('utbar', 'utbarD', 'btn', 'disabled', 'totalUtangBarang'));
         }
 }

@@ -31,8 +31,8 @@ class PinjRegController extends Controller
     {
         $pinjreg = PinjReg::find($id);
         // dd($data);
-        $pinjamanReg = PinjamanReguler::where('status', 1)->orderBy('id', 'desc')->get();
-        $angreg = AngsuranReguler::where('status', 1)->orderBy('id', 'desc')->get();
+        $pinjamanReg = PinjamanReguler::where('pinjreg_id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
+        $angreg = AngsuranReguler::where('pinjaman_reguler_id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
         $btn = PinjamanReguler::latest()->first();
         
         $disabled = true;

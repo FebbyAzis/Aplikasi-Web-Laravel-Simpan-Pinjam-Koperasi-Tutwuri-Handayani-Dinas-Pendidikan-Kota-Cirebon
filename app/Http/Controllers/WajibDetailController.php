@@ -11,7 +11,8 @@ class WajibDetailController extends Controller
     {
         
         $save = new WajibDetail;
-        $save->simpanan_wajib_id = $request->simpanan_wajib_id; 
+        $save->simpanan_wajib_id = $request->simpanan_wajib_id;
+        $save->anggota_id = $request->anggota_id; 
         $save->bulan = $request->bulan;
         $save->simpanan_wajib = str_replace('.','',$request->simpanan_wajib);
         $save->save(); 

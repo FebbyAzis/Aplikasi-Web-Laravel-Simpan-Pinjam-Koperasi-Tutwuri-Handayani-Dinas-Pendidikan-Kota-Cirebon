@@ -25,11 +25,25 @@ class UtangP3DetailController extends Controller
         $p = UtangP3Detail::find($id);
         // dd($p);
         $pp = AngsuranUtangP3::latest('bulan')->get();
-        $angs = AngsuranUtangP3::where('status', 1)->sum('nominal_angsuran');
-        $jasa = AngsuranUtangP3::where('status', 1)->sum('jasa');
+        $angs = AngsuranUtangP3::where('utang_p3_detail_id', $id)->where('status', 1)->sum('nominal_angsuran');
+        $jasa = AngsuranUtangP3::where('utang_p3_detail_id', $id)->where('status', 1)->sum('jasa');
         $disabled = true;
         // dd($data);
-        $angreg = AngsuranUtangP3::where('status', 1)->orderBy('id', 'desc')->get();
-        return view('admin.pinjaman_reguler.show_detail', compact('angreg', 'p', 'pp', 'angs', 'jasa', 'disabled'));
+        $angreg = AngsuranUtangP3::where('utang_p3_detail_id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
+        return view('admin.utang_p3.show_detail', compact('angreg', 'p', 'pp', 'angs', 'jasa', 'disabled'));
     }    
+
+    public function lunas($id)
+    {
+        $p = UtangP3Detail::find($id);
+        UtangP3Detail::where('id', $id)->update(['status_pinjaman' => 0]);
+        return redirect()->back()->with('Successss', 'Status pinjaman berhasil diubah!');
+    }
+
+    public function hapusUtangP3Detail($id)
+    {
+        $WD = UtangP3Detail::find($id);
+        UtangP3Detail::where('id', $id)->update(['status' => 0]);
+        return redirect()->back()->with('Successs', 'Data berhasil dihapus!');
+    }
 }

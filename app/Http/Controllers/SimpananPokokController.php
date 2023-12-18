@@ -13,7 +13,8 @@ class SimpananPokokController extends Controller
         $simp = SimpananPokok::where('status', 1)->orderBy('id', 'desc')->get();
         $angg = Anggota::where('status', 1)->get();
         $simpOptions = SimpananPokok::where('status', 1)->pluck('anggota_id')->toArray();
-        return view('admin.simpanan_pokok.index', compact('simp', 'angg', 'simpOptions'));
+        $simptotal = SimpananPokok::where('status', 1)->sum('simpanan_pokok');
+        return view('admin.simpanan_pokok.index', compact('simp', 'angg', 'simpOptions', 'simptotal'));
     }
 
     public function store(Request $request)

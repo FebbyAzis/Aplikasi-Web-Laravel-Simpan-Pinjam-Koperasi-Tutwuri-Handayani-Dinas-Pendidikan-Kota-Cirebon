@@ -6,7 +6,7 @@
                       <div class="col-md-12">
                           <div class="flex-wrap d-flex justify-content-between align-items-center">
                               <div>
-                                  <h3>Detail Pinjaman Reguler | {{$p->anggota->nama}}</h3>
+                                  <h1>Detail Pinjaman Reguler</h1>
                                   <p>MyKOPERASI</p>
                               </div>
                               <div>
@@ -16,7 +16,7 @@
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.33 2H16.66C20.06 2 22 3.92 22 7.33V16.67C22 20.06 20.07 22 16.67 22H7.33C3.92 22 2 20.06 2 16.67V7.33C2 3.92 3.92 2 7.33 2ZM12.82 12.83H15.66C16.12 12.82 16.49 12.45 16.49 11.99C16.49 11.53 16.12 11.16 15.66 11.16H12.82V8.34C12.82 7.88 12.45 7.51 11.99 7.51C11.53 7.51 11.16 7.88 11.16 8.34V11.16H8.33C8.11 11.16 7.9 11.25 7.74 11.4C7.59 11.56 7.5 11.769 7.5 11.99C7.5 12.45 7.87 12.82 8.33 12.83H11.16V15.66C11.16 16.12 11.53 16.49 11.99 16.49C12.45 16.49 12.82 16.12 12.82 15.66V12.83Z" fill="currentColor">
                                         </path>                            
                                     </svg>                                                
-                                    Tambah Pinjaman
+                                    Bayar Angsuran
                                 </a>
 
                                 {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -59,6 +59,12 @@
                       </div>
                    </div>
                    <div class="card-body">
+                    @if (session('Successss'))
+                    <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert">
+                        <span><b>Success</b> {{session('Successss')}}</span>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
                       <div class="row">
                         {{-- <div class="col-md-12 mb-3">
                             <table class="table">
@@ -89,7 +95,7 @@
                                   <tr>
                                     <th scope="row">Jenis Pinjaman</th>
                                     <td>:</td>
-                                    <td>Utang Barang</td>
+                                    <td>Pinjaman Reguler</td>
                                    
                                   </tr>
                                   <tr>
@@ -110,13 +116,15 @@
                                 <center>
                                     @php
                                           $bungareq = ($p->nominal_utang * $p->bunga) / 100;
+                                          $qt = ($p->nominal_utang/$p->lama) + $bungareq;
                                       @endphp
-                                    @if ($p->nominal_utang/$p->lama+ $bungareq * $p->lama == $angs+$jasa)
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{$p->id}}">LUNAS</button>
+                                    @if ($qt * $p->lama - ($angs + $jasa) <= 99)
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop4{{$p->id}}">LUNAS</button>
                                     @else
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{$p->id}}" disabled>LUNAS</button>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop4{{$p->id}}" disabled>LUNAS</button>
                                     @endif
-                                    
+                                    {{-- @dd(((($p->nominal_utang/$p->lama)+ $bungareq) * $p->lama) - ($angs + $jasa)) --}}
+                                    {{-- @dd((($p->nominal_utang/$p->lama)+ $bungareq) * $p->lama) --}}
                                 </center>
                                 
                               </div>
@@ -159,13 +167,17 @@
                                     </tr>
                                       <th scope="row">Sisa Angsuran</th>
                                       <td>:</td>
-                                      <td>Rp. {{ number_format((($p->nominal_utang/$p->lama)+ $bungareq) * $p->lama - $angs += $jasa , 0, ',', '.') }}</td> 
+                                      @php
+                                          $txt = $angs + $jasa;
+                                      @endphp
+                                      <td>Rp. {{ number_format(((($p->nominal_utang/$p->lama)+ $bungareq) * $p->lama) - $txt , 0, ',', '.') }}</td> 
                                     </tr>
                                    
                                   </tbody>
                                 </table>
                         </div>
                       </div>
+                     
                    </div>
                 </div>
              </div>
@@ -173,7 +185,7 @@
               <div class="card">
                  <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
-                       <h4 class="card-title">Tabel Data Angsuran Pinjaman Reguler | {{$p->anggota->nama}}</h4>
+                       <h4 class="card-title">Tabel Data Angsuran Pinjaman Reguler | <b>{{$p->anggota->nama}}</b></h4>
                     </div>
                  </div>
                  <div class="card-body">
@@ -236,9 +248,38 @@
         </div>
            </div>
 
+
+           
+           <!-- Modal -->
+           <form action="{{url('status-pinjaman-reguler/'. $p->id)}}" method="POST">
+            @csrf
+            @method('PUT')
+           <div class="modal fade" id="staticBackdrop4{{$p->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Hapus Simpanan Manasuka</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Apakah anda yakin ingin mengubah status pinjaman <b>{{$p->anggota->nama}} - Rp. {{ number_format($p->nominal_utang ,0, ',', '.') }}</b> menjadi lunas?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
+                        <button type="submit" class="btn btn-primary">Ya</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </form>
+            
+
+
            @foreach ($angreg as $item)
            <!-- Modal -->
-           <form action="{{url('manasuka-detail/'. $item->id)}}">
+           <form action="{{url('hapus-angsuran-reguler/'. $item->id)}}" method="POST">
+            @csrf
+            @method('PUT')
            <div class="modal fade" id="staticBackdrop1{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

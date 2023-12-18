@@ -48,7 +48,7 @@
                     </div>
                  </div>
                  <div class="card-body">
-                    <p>Berikut adalah tabel data utang p-3 seluruh anggota koperasi.</p>
+                    <p>Berikut adalah tabel data anggota yang memiliki pinjaman reguler.</p>
                     @if (session('Success'))
                     <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert">
                         <span><b>Success</b> {{session('Success')}}</span>
@@ -71,7 +71,7 @@
                             <tr>
                                 
                                 <td>{{ $no+1 }}</td>
-                                <td>{{ $item->anggota->nama }}</td>
+                                <td><a href="{{route('utang-p3.show', $item->id)}}">{{ $item->anggota->nama }}</a></td>
                                 {{-- <td>Rp. {{ number_format($item->simpanan_pokok ,0, ',', '.') }}</td> --}}
                                 <td>
                                     <form>

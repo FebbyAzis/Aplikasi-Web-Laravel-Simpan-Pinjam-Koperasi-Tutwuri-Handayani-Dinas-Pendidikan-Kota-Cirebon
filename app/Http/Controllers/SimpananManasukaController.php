@@ -32,8 +32,8 @@ class SimpananManasukaController extends Controller
     {
         $simpM = SimpananManasuka::find($id);
         // dd($data);
-        $MD = ManasukaDetail::where('status', 1)->orderBy('id', 'desc')->get();
-        $penarikan = Penarikan::where('status', 1)->orderBy('id', 'desc')->get();
+        $MD = ManasukaDetail::where('simpanan_manasuka_id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
+        $penarikan = Penarikan::where('simpanan_manasuka_id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
         return view('admin.simpanan_manasuka.show', compact('simpM', 'MD', 'penarikan'));
     }
 

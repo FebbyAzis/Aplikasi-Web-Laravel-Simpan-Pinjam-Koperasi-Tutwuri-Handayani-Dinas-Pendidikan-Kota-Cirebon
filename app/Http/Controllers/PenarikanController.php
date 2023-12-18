@@ -11,6 +11,7 @@ class PenarikanController extends Controller
     {
         $save = new Penarikan;
         $save->simpanan_manasuka_id = $request->simpanan_manasuka_id; 
+        $save->anggota_id = $request->anggota_id; 
         $save->jumlah_penarikan = str_replace('.','',$request->jumlah_penarikan);
         $save->save(); 
         return redirect()->back()->with('y', 'Data berhasil ditambahkan!');

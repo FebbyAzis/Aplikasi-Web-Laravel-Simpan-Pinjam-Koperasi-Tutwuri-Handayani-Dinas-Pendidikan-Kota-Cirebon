@@ -154,7 +154,7 @@
                         </a>
                         <ul class="sub-nav collapse" id="sidebar-widget" data-bs-parent="#sidebar-menu">
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('simpanan-pokok*') ? 'active' : '' }}" href="{{route('simpanan-pokok.index')}}">
+                                <a class="nav-link {{ request()->is('simpanan-pokok*') ? 'active' : 'simpanan-pokok-anggota' }}" href="{{url('simpanan-pokok-anggota')}}">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                             <g>
@@ -167,7 +167,7 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('simpanan-wajib*') ? 'active' : '' }}" href="{{route('simpanan-wajib.index')}}">
+                                <a class="nav-link {{ request()->is('simpanan-wajib-anggota*') ? 'active' : '' }}" href="{{url('simpanan-wajib-anggota')}}">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                             <g>
@@ -180,7 +180,7 @@
                                 </a>
                             </li>
                              <li class="nav-item">
-                                <a class="nav-link {{ request()->is('simpanan-manasuka*') ? 'active' : '' }}" href="{{route('simpanan-manasuka.index')}}">
+                                <a class="nav-link {{ request()->is('simpanan-manasuka-anggota*') ? 'active' : '' }}" href="{{url('simpanan-manasuka-anggota')}}">
                                     <i class="icon">
                                         <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                             <g>
@@ -212,7 +212,7 @@
                       </a>
                       <ul class="sub-nav collapse" id="sidebar-widget1" data-bs-parent="#sidebar-menu">
                           <li class="nav-item">
-                              <a class="nav-link"  href="">
+                              <a class="nav-link  {{ request()->is('pinjaman-reguler-anggota*') ? 'active' : '' }}" href="{{url('pinjaman-reguler-anggota')}}">
                                   <i class="icon">
                                       <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                           <g>
@@ -221,11 +221,11 @@
                                       </svg>
                                   </i>
                                   <i class="sidenav-mini-icon"> S </i>
-                                  <span class="item-name">Simpanan Pokok</span>
+                                  <span class="item-name">Pinjaman Reguler</span>
                               </a>
                           </li>
                           <li class="nav-item">
-                              <a class="nav-link {{ request()->is('') ? 'active' : '' }}" href="{{route('simpanan-wajib.index')}}">
+                              <a class="nav-link {{ request()->is('utang-barang-anggota*') ? 'active' : '' }}" href="{{url('utang-barang-anggota')}}">
                                   <i class="icon">
                                       <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                           <g>
@@ -234,11 +234,11 @@
                                       </svg>
                                   </i>
                                   <i class="sidenav-mini-icon"> S </i>
-                                  <span class="item-name">Simpanan Wajib</span>
+                                  <span class="item-name">Utang Barang</span>
                               </a>
                           </li>
                            <li class="nav-item">
-                              <a class="nav-link {{ request()->is('') ? 'active' : '' }}" href="{{route('simpanan-manasuka.index')}}">
+                              <a class="nav-link {{ request()->is('utang-p3-anggota*') ? 'active' : '' }}" href="{{url('utang-p3-anggota')}}">
                                   <i class="icon">
                                       <svg class="icon-10" xmlns="http://www.w3.org/2000/svg" width="10" viewBox="0 0 24 24" fill="currentColor">
                                           <g>
@@ -247,11 +247,11 @@
                                       </svg>
                                   </i>
                                   <i class="sidenav-mini-icon"> S </i>
-                                  <span class="item-name">Simpanan Manasuka</span>
+                                  <span class="item-name">Utang P-3</span>
                               </a>
                           </li>
                       </ul>
-                  </li> 
+                    </li> 
                     
                    
                 </ul>

@@ -31,7 +31,9 @@ class UtangP3Controller extends Controller
     {
         $utp3 = UtangP3::find($id);
         $utp3D = UtangP3Detail::where('status', 1)->get();
-        return view('admin.utang_p3.show', compact('utp3', 'utp3D'));
+        $btn = UtangP3Detail::where('status', 1)->latest()->first();
+        $totalUtangP3 = UtangP3Detail::where('status', 1)->sum('nominal_utang');
+        return view('admin.utang_p3.show', compact('utp3', 'utp3D', 'btn', 'totalUtangP3'));
     }
     
 }

@@ -17,4 +17,11 @@ class AngsuranRegulerController extends Controller
         $save->save(); 
         return redirect()->back()->with('Success', 'Data berhasil ditambahkan!');
     }
+
+    public function hapusAngsuranReguler($id)
+    {
+        $WD = AngsuranReguler::find($id);
+        AngsuranReguler::where('id', $id)->update(['status' => 0]);
+        return redirect()->back()->with('Successs', 'Data berhasil dihapus!');
+    }
 }

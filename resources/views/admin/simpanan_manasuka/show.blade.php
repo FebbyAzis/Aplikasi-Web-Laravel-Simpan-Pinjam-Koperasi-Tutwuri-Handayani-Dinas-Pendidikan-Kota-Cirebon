@@ -368,6 +368,7 @@
                                 <p><b>Simpanan saat ini : Rp. {{ number_format($q ,0, ',', '.') }}</b></p>
                             </div>
                             <input type="hidden" name="simpanan_manasuka_id" value="{{$simpM->id}}">
+                            <input type="hidden" name="anggota_id" value="{{$simpM->anggota->id}}">
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Nominal Simpanan Manasuka</label>
                                 <input type="text" id="simpanan_manasuka" class="form-control" name="simpanan_manasuka">
@@ -413,6 +414,7 @@
                                 <p><b>Simpanan saat ini : Rp. {{ number_format($q ,0, ',', '.') }}</b></p>
                             </div>
                             <input type="hidden" name="simpanan_manasuka_id" value="{{$simpM->id}}">
+                            <input type="hidden" name="anggota_id" value="{{$simpM->anggota->id}}">
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Jumlah Penarikan Simpanan</label>
                                 <input type="text" id="penarikan" class="form-control" name="jumlah_penarikan">

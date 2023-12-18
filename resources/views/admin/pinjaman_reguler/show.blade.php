@@ -6,7 +6,7 @@
                       <div class="col-md-12">
                           <div class="flex-wrap d-flex justify-content-between align-items-center">
                               <div>
-                                  <h3>Detail Pinjaman Reguler | {{$pinjreg->anggota->nama}}</h3>
+                                  <h1>Pinjaman Reguler</h1>
                                   <p>MyKOPERASI</p>
                               </div>
                               <div>
@@ -66,11 +66,11 @@
               <div class="card">
                  <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
-                       <h4 class="card-title">Tabel Data Simpanan Manasuka | {{$pinjreg->anggota->nama}}</h4>
+                       <h4 class="card-title">Tabel Data Pinjaman Reguler</h4>
                     </div>
                  </div>
                  <div class="card-body">
-                    <p>Berikut adalah tabel data simpanan manasuka yang dimiliki anggota {{$pinjreg->anggota->nama}}.</p>
+                    <p>Berikut adalah tabel data pinjaman reguler yang dimiliki anggota {{$pinjreg->anggota->nama}}.</p>
                     @if (session('Success'))
                     <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert">
                         <span><b>Success</b> {{session('Success')}}</span>
@@ -99,8 +99,8 @@
                             <tr>
                                 
                                 <td>{{ $no+1 }}</td>
-                                <td>{{ $pinjreg->anggota->nama }}</td>
-                                <td>Rp. {{ number_format($item->nominal_pinjaman ,0, ',', '.') }}</td>
+                                <td><a href="{{route('pinjaman-reguler-detail.show', $item->id)}}">{{ $pinjreg->anggota->nama }}</a></td>
+                                <td>Rp. {{ number_format($item->nominal_utang ,0, ',', '.') }}</td>
                                 @if ($item->status_pinjaman == 1)
                                 <td class="text-danger">Belum Lunas</td>
                                 @else
@@ -112,7 +112,7 @@
                               
                                 <td>
                                     <form>
-                                        <a class="btn btn-sm btn-primary" href="{{route('pinjaman-reguler-anggota.show', $item->id)}}">LIHAT</a>
+                                        <a class="btn btn-sm btn-primary" href="{{route('pinjaman-reguler-detail.show', $item->id)}}">LIHAT</a>
                                         <a class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{$item->id}}">HAPUS</a>
                                     </form>
                                 </td>
@@ -133,16 +133,16 @@
 
            @foreach ($pinjamanReg as $item)
            <!-- Modal -->
-           <form action="{{url('manasuka-detail/'. $item->id)}}">
+           <form action="{{url('hapus-pinjaman-reguler/'. $item->id)}}">
            <div class="modal fade" id="staticBackdrop1{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Hapus Simpanan Manasuka</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Hapus Pinjaman Reguler</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Apakah anda yakin ingin menghapus simpanan manasuka <b>{{$pinjreg->anggota->nama}} - Rp. {{ number_format($item->nominal_pinjaman ,0, ',', '.') }}</b>?</p>
+                        <p>Apakah anda yakin ingin menghapus pinjaman reguler <b>{{$pinjreg->anggota->nama}} - Rp. {{ number_format($item->nominal_utang ,0, ',', '.') }}</b>?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
@@ -154,31 +154,8 @@
             </form>
             @endforeach
 
-            @foreach ($pinjamanReg as $u)
-            <!-- Modal -->
-            <form action="{{url('penarikan-simpanan/'. $u->id)}}">
-            <div class="modal fade" id="staticBackdrop2{{$u->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-             <div class="modal-dialog">
-                 <div class="modal-content">
-                     <div class="modal-header">
-                         <h5 class="modal-title" id="staticBackdropLabel">Hapus Penarikan Simpanan Manasuka</h5>
-                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                     </div>
-                     <div class="modal-body">
-                         <p>Apakah anda yakin ingin menghapus penarikan simpanan manasuka <b>{{$pinjreg->anggota->nama}} - Rp. {{ number_format($u->jumlah_penarikan ,0, ',', '.') }}</b>?</p>
-                     </div>
-                     <div class="modal-footer">
-                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
-                         <button type="submit" class="btn btn-primary">Ya</button>
-                     </div>
-                 </div>
-             </div>
-             </div>
-             </form>
-             @endforeach
 
-
-           <form action="{{ route('pinjaman-reguler-anggota.store') }}" method="POST">
+           <form action="{{ route('pinjaman-reguler-detail.store') }}" method="POST">
             @csrf
             @method('POST') 
            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -189,27 +166,13 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Lengkapi data dibawah ini untuk menambahkan pinjaman reguler {{$pinjreg->anggota->nama}}!</p>
+                        <p>Lengkapi data dibawah ini untuk menambahkan pinjaman reguler anggota {{$pinjreg->anggota->nama}}!</p>
                         <div class="row">
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="choices-single-default">Pilih Anggota</label>
-                                <select class="form-select" data-trigger name="anggota_id" id="anggota_id">
-                                    <option value="0">-</option>
-                                    @foreach ($angg as $s)
-                                    @if (!in_array($s->id, $simpMOptions))
-                                        <option value="{{ $s->id }}" {{old('anggota_id') == $s->id ?  'selected' : null}}>{{ $s->nama }}
-                                        </option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                            {{-- <div class="col-sm-12">
-                                <p><b>Simpanan saat ini : Rp. {{ number_format($q ,0, ',', '.') }}</b></p>
-                            </div> --}}
                             <input type="hidden" name="pinjreg_id" value="{{$pinjreg->id}}">
+                            <input type="hidden" name="anggota_id" value="{{$pinjreg->anggota->id}}">
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Nominal Pinjaman</label>
-                                <input type="text" id="pinjaman" class="form-control" name="nominal_pinjaman">
+                                <input type="text" id="pinjaman" class="form-control" name="nominal_utang">
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Tempo</label>
@@ -237,95 +200,6 @@
             </div>
             </div>
         </form>
-
-        <form action="{{ route('penarikan-simpanan.store') }}" method="POST">
-            @csrf
-            @method('POST') 
-           <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Penarikan Simpanan Manasuka</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Isi kolom dibawah ini untuk menarik simpanan manasuka <b>{{$pinjreg->anggota->nama}}</b> !</p>
-                        <div class="row">
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="choices-single-default">Pilih Anggota</label>
-                                <select class="form-select" data-trigger name="anggota_id" id="anggota_id">
-                                    <option value="0">-</option>
-                                    @foreach ($angg as $s)
-                                    @if (!in_array($s->id, $simpMOptions))
-                                        <option value="{{ $s->id }}" {{old('anggota_id') == $s->id ?  'selected' : null}}>{{ $s->nama }}
-                                        </option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                            
-                            <input type="hidden" name="simpanan_manasuka_id" value="{{$pinjreg->id}}">
-                            <div class="form-group">
-                                <label class="form-label" for="exampleInputText1">Jumlah Penarikan Simpanan</label>
-                                <input type="text" id="penarikan" class="form-control" name="jumlah_penarikan">
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </form>
-
-        @foreach ($pinjamanReg as $item)
-        <form action="{{ route('simpanan-manasuka.update', $item->id) }}" method="POST">
-            @csrf
-            @method('PUT') 
-           <div class="modal fade" id="staticBackdrop2{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Edit Simpanan Manasuka</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Lengkapi data dibawah ini untuk mengubah simpanan manasuka {{$pinjreg->anggota->nama}}!</p>
-                        <div class="row">
-                            
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="choices-single-default">Pilih Anggota</label>
-                                <select class="form-select" data-trigger name="users_id" id="users_id">
-                                    <option value="0">-</option>
-                                    @foreach ($users as $s)
-                                    @if (!in_array($s->id, $anggotaOptions))
-                                        <option value="{{ $s->id }}" {{old('users_id') == $s->id ?  'selected' : null}}>{{ $s->name }}
-                                        </option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                            
-                            <div class="form-group">
-                                <label class="form-label" for="exampleInputText1">Nominal Simpanan Manasuka</label>
-                                <input type="text" class="form-control" id="simpanan_manasuka1" placeholder=" " name="simpanan_manasuka" value="{{$item->simpanan_manasuka}}">
-                            </div>
-                            
-                            
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </form>
-        @endforeach
 
 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

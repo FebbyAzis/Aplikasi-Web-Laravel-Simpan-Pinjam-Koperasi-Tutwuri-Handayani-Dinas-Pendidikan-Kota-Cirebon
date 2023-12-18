@@ -55,6 +55,12 @@
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                     @endif
+                    @if (session('Successss'))
+                    <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert">
+                        <span><b>Success</b> {{session('Successss')}}</span>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
                     <div class="table-responsive">
                        <table id="datatable" class="table table-striped" data-toggle="data-table">
                           <thead>
@@ -69,7 +75,9 @@
                           <tfoot>
                             <tr>
                                 <th></th>
+                                <td></td>
                                 <td><b>Total</b></td>
+                                
                                     @php
                                         $totalss = 0;        
                                     @endphp
@@ -94,7 +102,6 @@
                               
                                 <td>
                                     <form>
-                                        <a class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop2{{$item->id}}">EDIT</a>
                                         <a class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{$item->id}}">HAPUS</a>
                                     </form>
                                 </td>
@@ -112,7 +119,9 @@
 
            @foreach ($WD as $item)
            <!-- Modal -->
-           <form action="{{url('wajib-detail/'. $item->id)}}">
+           <form action="{{url('hapus-simpanan-wajib/'. $item->id)}}" method="POST">
+            @csrf
+            @method('PUT')
            <div class="modal fade" id="staticBackdrop1{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -153,7 +162,7 @@
                                 @php
                                     $o = 0;
                                 @endphp
-                                @forelse ($WDD as $c)
+                                @forelse ($WD as $c)
                                     <label class="form-label" for="exampleInputText1">Simpanan Wajib Sebelumnya : <b>Rp. {{ number_format($c->simpanan_wajib ,0, ',', '.') }}</b></label>
                                     <input type="hidden" id="cc1" value="{{$c->simpanan_wajib}}">
                                 @empty
@@ -179,9 +188,10 @@
                             </div>
                            
                             <input type="hidden" name="simpanan_wajib_id" value="{{$simw->id}}">
+                            <input type="hidden" name="anggota_id" value="{{$simw->anggota->id}}">
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Nominal Simpanan Wajib</label>
-                                <input type="text" id="cc4" class="form-control" name="simpanan_wajib">
+                                <input type="text" id="simpanan_wajib" class="form-control" name="simpanan_wajib">
                                 
                             </div>
                         </div>

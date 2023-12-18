@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Anggota;
 use App\Models\Users;
 use App\Models\SimpananPokok;
+use App\Models\WajibDetail;
+use App\Models\ManasukaDetail;
+use App\Models\Penarikan;
 
 class DashboardAdminController extends Controller
 {
@@ -13,7 +16,11 @@ class DashboardAdminController extends Controller
     {
         $angg = Anggota::where('status', 1)->count();
         $simP = SimpananPokok::where('status', 1)->sum('simpanan_pokok');
-        return view('admin.dashboard', compact('angg', 'simP'));
+        $SimpananWajibTotal = WajibDetail::where('status', 1)->sum('simpanan_wajib');
+        $SimpananManasukaTotal = ManasukaDetail::where('status', 1)->sum('simpanan_manasuka');
+        $PenarikanManasukaTotal = Penarikan::where('status', 1)->sum('jumlah_penarikan');
+        return view('admin.dashboard', compact('angg', 'simP', 'SimpananWajibTotal', 'SimpananManasukaTotal',
+        'PenarikanManasukaTotal'));
     }
 
     public function update(Request $request, $id)

@@ -16,6 +16,7 @@ class SimpananWajibController extends Controller
         $angg = Anggota::where('status', 1)->get();
         $simw = SimpananWajib::where('status', 1)->orderBy('id', 'desc')->get();
         $simwOptions = SimpananWajib::where('status', 1)->pluck('anggota_id')->toArray();
+        
         return view('admin.simpanan_wajib.index', compact('angg', 'simw', 'simwOptions'));
     }
 
@@ -31,10 +32,17 @@ class SimpananWajibController extends Controller
     {
         $simw = SimpananWajib::find($id);
         // dd($data);
-        $WD = WajibDetail::where('status', 1)->orderBy('id', 'desc')->get();
-        $WDD = WajibDetail::latest('simpanan_wajib', $simw)->get();
+        $WD = WajibDetail::where('simpanan_wajib_id', $id)->where('status', 1)->orderBy('id', 'desc')->get();
+        $WDD = WajibDetail::latest('simpanan_wajib', $id)->get();
         // dd($WDD);
         return view('admin.simpanan_wajib.show', compact('simw', 'WD', 'WDD'));
+    }
+
+    public function hapusSimpananWajib($id)
+    {
+        $WD = WajibDetail::find($id);
+        WajibDetail::where('id', $id)->update(['status' => 0]);
+        return redirect()->back()->with('Successss', 'Data berhasil dihapus!');
     }
 
 //     public function calculate($anggotaId)

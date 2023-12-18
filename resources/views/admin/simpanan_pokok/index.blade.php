@@ -71,7 +71,13 @@
                                 <th>Action</th>
                              </tr>
                           </thead>
-                          
+                          <tfoot>
+                            <tr>
+                                <td></td>
+                                <td><b>Total</b></td>
+                                <td><b>Rp. {{ number_format($simptotal ,0, ',', '.') }}</b></td>
+                            </tr>
+                          </tfoot>
                           <tbody>
                             @foreach ($simp as $no=>$item)
                             <tr>

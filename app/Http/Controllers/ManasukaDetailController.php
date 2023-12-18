@@ -12,6 +12,7 @@ class ManasukaDetailController extends Controller
         
         $save = new ManasukaDetail;
         $save->simpanan_manasuka_id = $request->simpanan_manasuka_id; 
+        $save->anggota_id = $request->anggota_id; 
         $save->simpanan_manasuka = str_replace('.','',$request->simpanan_manasuka);
         $save->save(); 
         return redirect()->back()->with('Success', 'Data berhasil ditambahkan!');

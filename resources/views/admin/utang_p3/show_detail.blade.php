@@ -59,18 +59,13 @@
                       </div>
                    </div>
                    <div class="card-body">
+                    @if (session('Successss'))
+                    <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert">
+                        <span><b>Success</b> {{session('Successss')}}</span>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    @endif
                       <div class="row">
-                        {{-- <div class="col-md-12 mb-3">
-                            <table class="table">
-                                <tbody>
-                                    <tr>
-                                        <th scope="row">Nama Anggota</th>
-                                        <td>:</td>
-                                        <td>{{$p->anggota->nama}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> --}}
                         <div class="col-md-6">
                             <table class="table">
                                
@@ -109,12 +104,13 @@
                               <div class="col-md-12 mt-5">
                                 <center>
                                     @php
-                                          $bungareq = ($p->nominal_pinjaman * $p->bunga) / 100;
+                                          $bungareq = ($p->nominal_utang * $p->bunga) / 100;
+                                          $qt = ($p->nominal_utang/$p->lama) + $bungareq;
                                       @endphp
-                                    @if ($p->nominal_pinjaman/$p->lama+ $bungareq * $p->lama == $angs+$jasa)
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{$p->id}}">LUNAS</button>
+                                    @if ($qt * $p->lama - ($angs+$jasa) <= 99)
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop4{{$p->id}}">LUNAS</button>
                                     @else
-                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{$p->id}}" disabled>LUNAS</button>
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop4{{$p->id}}" disabled>LUNAS</button>
                                     @endif
                                     
                                 </center>
@@ -127,39 +123,39 @@
                                     <tr>
                                       <th scope="row">Jumlah Pinjaman</th>
                                       <td>:</td>
-                                      <td>Rp. {{ number_format($p['nominal_pinjaman'], 0, ',', '.') }}</td>
+                                      <td>Rp. {{ number_format($p['nominal_utang'], 0, ',', '.') }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">Bunga/Jasa</th>
                                       <td>:</td>
                                       @php
-                                          $bungareq = ($p->nominal_pinjaman * $p->bunga) / 100;
+                                          $bungareq = ($p->nominal_utang * $p->bunga) / 100;
                                       @endphp
-                                      <td>Rp. {{ number_format(($p->nominal_pinjaman * $p->bunga) / 100, 0, ',', '.') }}</td>
+                                      <td>Rp. {{ number_format(($p->nominal_utang * $p->bunga) / 100, 0, ',', '.') }}</td>
                                      
                                     </tr>
                                     <tr>
                                       <th scope="row">Nominal Angsuran</th>
                                       <td>:</td>
-                                      <td>Rp. {{ number_format($p->nominal_pinjaman / $p->lama, 0, ',', '.') }}</td>
+                                      <td>Rp. {{ number_format($p->nominal_utang / $p->lama, 0, ',', '.') }}</td>
                                      
                                     </tr>
                                     <tr>
                                       <th scope="row">Total Angsuran</th>
                                       <td>:</td>
-                                      <td>Rp. {{ number_format(($p->nominal_pinjaman/$p->lama)+ $bungareq, 0, ',', '.') }} / {{$p->lama}} Bulan</td>
+                                      <td>Rp. {{ number_format(($p->nominal_utang/$p->lama)+ $bungareq, 0, ',', '.') }} / {{$p->lama}} Bulan</td>
                                      
                                     </tr>
 
                                     <tr>
                                       <th scope="row">Total Pinjaman</th>
                                       <td>:</td>
-                                      <td>Rp. {{ number_format((($p->nominal_pinjaman/$p->lama)+ $bungareq) * $p->lama , 0, ',', '.') }}</td>
+                                      <td>Rp. {{ number_format((($p->nominal_utang/$p->lama)+ $bungareq) * $p->lama , 0, ',', '.') }}</td>
                                      
                                     </tr>
                                       <th scope="row">Sisa Angsuran</th>
                                       <td>:</td>
-                                      <td>Rp. {{ number_format((($p->nominal_pinjaman/$p->lama)+ $bungareq) * $p->lama - $angs += $jasa , 0, ',', '.') }}</td> 
+                                      <td>Rp. {{ number_format((($p->nominal_utang/$p->lama)+ $bungareq) * $p->lama - $angs += $jasa , 0, ',', '.') }}</td> 
                                     </tr>
                                    
                                   </tbody>
@@ -247,7 +243,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Apakah anda yakin ingin menghapus simpanan manasuka <b>{{$p->anggota->nama}} - Rp. {{ number_format($item->nominal_pinjaman ,0, ',', '.') }}</b>?</p>
+                        <p>Apakah anda yakin ingin menghapus simpanan manasuka <b>{{$p->anggota->nama}} - Rp. {{ number_format($item->nominal_utang ,0, ',', '.') }}</b>?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
@@ -258,6 +254,32 @@
             </div>
             </form>
             @endforeach
+
+        
+           <!-- Modal -->
+           <form action="{{url('status-utang-p3/'. $p->id)}}" method="POST">
+            @csrf
+            @method('PUT')
+           <div class="modal fade" id="staticBackdrop4{{$p->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Hapus Simpanan Manasuka</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Apakah anda yakin ingin mengubah status pinjaman <b>{{$p->anggota->nama}} - Rp. {{ number_format($p->nominal_utang ,0, ',', '.') }}</b> menjadi lunas?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
+                        <button type="submit" class="btn btn-primary">Ya</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </form>
+
+            
 
             @foreach ($angreg as $u)
             <!-- Modal -->
@@ -283,7 +305,7 @@
              @endforeach
 
 
-           <form action="{{ route('angsuran-pinjaman-reguler.store') }}" method="POST">
+           <form action="{{ route('angsuran-utang-p3.store') }}" method="POST">
             @csrf
             @method('POST') 
            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -311,15 +333,16 @@
                             {{-- <div class="col-sm-12">
                                 <p><b>Simpanan saat ini : Rp. {{ number_format($q ,0, ',', '.') }}</b></p>
                             </div> --}}
-                            <input type="hidden" name="pinjaman_reguler_id" value="{{$p->id}}">
+                            <input type="hidden" name="utang_p3_detail_id" value="{{$p->id}}">
+                            <input type="hidden" name="anggota_id" value="{{$p->anggota->id}}">
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Nominal Angsuran</label>
-                                <input type="text" id="angsuran1" class="form-control" name="nominal_angsuran" value="{{ number_format($p->nominal_pinjaman / $p->lama ,0, ',', '.') }}">
+                                <input type="text" id="angsuran1" class="form-control" name="nominal_angsuran" value="{{ number_format($p->nominal_utang / $p->lama ,0, ',', '.') }}">
                             </div>
                             
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Jasa</label>
-                                <input type="text" id="angsuran2" class="form-control" name="jasa" value="{{ number_format($p->nominal_pinjaman * $p->bunga / 100 ,0, ',', '.') }}">
+                                <input type="text" id="angsuran2" class="form-control" name="jasa" value="{{ number_format($p->nominal_utang * $p->bunga / 100 ,0, ',', '.') }}">
                             </div>
 
                             <div class="form-group">

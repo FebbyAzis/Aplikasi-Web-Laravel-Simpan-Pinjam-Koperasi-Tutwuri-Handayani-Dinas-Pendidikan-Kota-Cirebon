@@ -6,19 +6,28 @@
                       <div class="col-md-12">
                           <div class="flex-wrap d-flex justify-content-between align-items-center">
                               <div>
-                                  <h1>Simpanan Manasuka | Detail</h1>
+                                  <h1>Utang Barang</h1>
                                   <p>MyKOPERASI</p>
                               </div>
                               <div>
-
-                                <a type="button" class="btn btn-link btn-soft-light text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                @if ($btn->status_pinjaman == 1)
+                                <button type="button" class="btn btn-link btn-soft-light text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop" @disabled(true)>
                                     <svg class="icon-32" width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                            
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M7.33 2H16.66C20.06 2 22 3.92 22 7.33V16.67C22 20.06 20.07 22 16.67 22H7.33C3.92 22 2 20.06 2 16.67V7.33C2 3.92 3.92 2 7.33 2ZM12.82 12.83H15.66C16.12 12.82 16.49 12.45 16.49 11.99C16.49 11.53 16.12 11.16 15.66 11.16H12.82V8.34C12.82 7.88 12.45 7.51 11.99 7.51C11.53 7.51 11.16 7.88 11.16 8.34V11.16H8.33C8.11 11.16 7.9 11.25 7.74 11.4C7.59 11.56 7.5 11.769 7.5 11.99C7.5 12.45 7.87 12.82 8.33 12.83H11.16V15.66C11.16 16.12 11.53 16.49 11.99 16.49C12.45 16.49 12.82 16.12 12.82 15.66V12.83Z" fill="currentColor">
                                         </path>                            
                                     </svg>                                                
-                                    Tambah Simpanan Manasuka
-                                </a>
-
+                                    Tambah Pinjaman Baru
+                                </button>
+                                @else
+                                <button type="button" class="btn btn-link btn-soft-light text-white" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <svg class="icon-32" width="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">                            
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.33 2H16.66C20.06 2 22 3.92 22 7.33V16.67C22 20.06 20.07 22 16.67 22H7.33C3.92 22 2 20.06 2 16.67V7.33C2 3.92 3.92 2 7.33 2ZM12.82 12.83H15.66C16.12 12.82 16.49 12.45 16.49 11.99C16.49 11.53 16.12 11.16 15.66 11.16H12.82V8.34C12.82 7.88 12.45 7.51 11.99 7.51C11.53 7.51 11.16 7.88 11.16 8.34V11.16H8.33C8.11 11.16 7.9 11.25 7.74 11.4C7.59 11.56 7.5 11.769 7.5 11.99C7.5 12.45 7.87 12.82 8.33 12.83H11.16V15.66C11.16 16.12 11.53 16.49 11.99 16.49C12.45 16.49 12.82 16.12 12.82 15.66V12.83Z" fill="currentColor">
+                                        </path>                            
+                                    </svg>                                                
+                                    Tambah Pinjaman Baru
+                                </button>
+                                @endif
+                                
                                 {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                     Launch static backdrop modal
                                     </button> --}}
@@ -46,11 +55,11 @@
               <div class="card">
                  <div class="card-header d-flex justify-content-between">
                     <div class="header-title">
-                       <h4 class="card-title">Tabel Data Simpanan Manasuka | {{$utbar->anggota->nama}}</h4>
+                       <h4 class="card-title">Tabel Data Utang Barang | <b>{{$utbar->anggota->nama}}</b></h4>
                     </div>
                  </div>
                  <div class="card-body">
-                    <p>Berikut adalah tabel data simpanan manasuka yang dimiliki anggota {{$utbar->anggota->nama}}.</p>
+                    <p>Berikut adalah tabel data utang barang yang dimiliki anggota {{$utbar->anggota->nama}}.</p>
                     @if (session('Success'))
                     <div class="mb-3 alert alert-left alert-success alert-dismissible fade show" role="alert">
                         <span><b>Success</b> {{session('Success')}}</span>
@@ -69,7 +78,8 @@
                              <tr>
                                 <th>No</th>
                                 <th>Nama Anggota</th>
-                                <th>Simpanan Manasuka</th>
+                                <th>Nominal Utang Barang</th>
+                                <th>Status Pinjaman</th>
                                 <th>Action</th>
                              </tr>
                           </thead>
@@ -77,15 +87,7 @@
                             <tr>
                                 <th></th>
                                 <td><b>Total</b></td>
-                                    @php
-                                        $totals = 0;        
-                                    @endphp
-                                @foreach ($utbarD as $y)
-                                    @php
-                                        $totals += $y->simpanan_manasuka
-                                    @endphp
-                                @endforeach
-                                <td colspan="2"><b>Rp. {{ number_format($totals ,0, ',', '.') }}</b></td>
+                                <td colspan="2"><b>Rp. {{ number_format($totalUtangBarang ,0, ',', '.') }}</b></td>
                             </tr>
                           </tfoot>
                           <tbody>
@@ -93,14 +95,19 @@
                             <tr>
                                 
                                 <td>{{ $no+1 }}</td>
-                                <td>{{ $utbar->anggota->nama }}</td>
+                                <td><a href="{{route('utang-barang-detail.show', $item->id)}}">{{ $utbar->anggota->nama }}</a></td>
                                 <td>Rp. {{ number_format($item->nominal_utang ,0, ',', '.') }}</td>
                                 {{-- <td>{{ $item->manasuka_detail->simpanan_manasuka}}</td> --}}
-                               
+                                @if ($item->status_pinjaman == 1)
+                                <td class="text-danger">Belum Lunas</td>
+                                @else
+                                <td class="text-success">Lunas</td>
+                                @endif
                               
                                 <td>
                                     <form>
-                                        <a class="btn btn-sm btn-primary" href="{{route('utang-barang-anggota.show', $item->id)}}">LIHAT</a>
+                                        <a class="btn btn-sm btn-primary" href="{{route('utang-barang-detail.show', $item->id)}}">LIHAT</a>
+                                        <a class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop1{{$item->id}}">HAPUS</a>
                                     </form>
                                 </td>
                                 
@@ -117,16 +124,16 @@
 
            @foreach ($utbarD as $item)
            <!-- Modal -->
-           <form action="{{url('manasuka-detail/'. $item->id)}}">
+           <form action="{{url('hapus-utang-barang-detail/'. $item->id)}}">
            <div class="modal fade" id="staticBackdrop1{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Hapus Simpanan Manasuka</h5>
+                        <h5 class="modal-title" id="staticBackdropLabel">Hapus Utang Barang</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Apakah anda yakin ingin menghapus simpanan manasuka <b>{{$utbar->anggota->nama}} - Rp. {{ number_format($item->simpanan_manasuka ,0, ',', '.') }}</b>?</p>
+                        <p>Apakah anda yakin ingin menghapus utang barang anggota <b>{{$utbar->anggota->nama}} - Rp. {{ number_format($item->nominal_utang ,0, ',', '.') }}</b>?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
@@ -138,31 +145,7 @@
             </form>
             @endforeach
 
-            {{-- @foreach ($penarikan as $u)
-            <!-- Modal -->
-            <form action="{{url('penarikan-simpanan/'. $u->id)}}">
-            <div class="modal fade" id="staticBackdrop2{{$u->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-             <div class="modal-dialog">
-                 <div class="modal-content">
-                     <div class="modal-header">
-                         <h5 class="modal-title" id="staticBackdropLabel">Hapus Penarikan Simpanan Manasuka</h5>
-                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                     </div>
-                     <div class="modal-body">
-                         <p>Apakah anda yakin ingin menghapus penarikan simpanan manasuka <b>{{$utbar->anggota->nama}} - Rp. {{ number_format($u->jumlah_penarikan ,0, ',', '.') }}</b>?</p>
-                     </div>
-                     <div class="modal-footer">
-                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
-                         <button type="submit" class="btn btn-primary">Ya</button>
-                     </div>
-                 </div>
-             </div>
-             </div>
-             </form>
-             @endforeach --}}
-
-
-           <form action="{{ route('utang-barang-anggota.store') }}" method="POST">
+           <form action="{{ route('utang-barang-detail.store') }}" method="POST">
             @csrf
             @method('POST') 
            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -175,20 +158,9 @@
                     <div class="modal-body">
                         <p>Lengkapi data dibawah ini untuk menambahkan simpanan manasuka baru!</p>
                         <div class="row">
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="choices-single-default">Pilih Anggota</label>
-                                <select class="form-select" data-trigger name="anggota_id" id="anggota_id">
-                                    <option value="0">-</option>
-                                    @foreach ($angg as $s)
-                                    @if (!in_array($s->id, $utbarOptions))
-                                        <option value="{{ $s->id }}" {{old('anggota_id') == $s->id ?  'selected' : null}}>{{ $s->nama }}
-                                        </option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                            
+
                             <input type="hidden" name="utang_barang_id" value="{{$utbar->id}}">
+                            <input type="hidden" name="anggota_id" value="{{$utbar->anggota->id}}">
                             <div class="form-group">
                                 <label class="form-label" for="exampleInputText1">Nominal Simpanan Manasuka</label>
                                 <input type="text" id="nominal_utang" class="form-control" name="nominal_utang">
@@ -228,96 +200,6 @@
             </div>
             </div>
         </form>
-
-        <form action="{{ route('penarikan-simpanan.store') }}" method="POST">
-            @csrf
-            @method('POST') 
-           <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Penarikan Simpanan Manasuka</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Isi kolom dibawah ini untuk menarik simpanan manasuka <b>{{$utbar->anggota->nama}}</b> !</p>
-                        <div class="row">
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="choices-single-default">Pilih Anggota</label>
-                                <select class="form-select" data-trigger name="anggota_id" id="anggota_id">
-                                    <option value="0">-</option>
-                                    @foreach ($angg as $s)
-                                    @if (!in_array($s->id, $utbarOptions))
-                                        <option value="{{ $s->id }}" {{old('anggota_id') == $s->id ?  'selected' : null}}>{{ $s->nama }}
-                                        </option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                           
-                            <input type="hidden" name="simpanan_manasuka_id" value="{{$utbar->id}}">
-                            <div class="form-group">
-                                <label class="form-label" for="exampleInputText1">Jumlah Penarikan Simpanan</label>
-                                <input type="text" id="penarikan" class="form-control" name="jumlah_penarikan">
-                                
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </form>
-
-        @foreach ($utbarD as $item)
-        <form action="{{ route('simpanan-manasuka.update', $item->id) }}" method="POST">
-            @csrf
-            @method('PUT') 
-           <div class="modal fade" id="staticBackdrop2{{$item->id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Edit Simpanan Manasuka</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Lengkapi data dibawah ini untuk mengubah simpanan manasuka {{$utbar->anggota->nama}}!</p>
-                        <div class="row">
-                            
-                            {{-- <div class="form-group">
-                                <label class="form-label" for="choices-single-default">Pilih Anggota</label>
-                                <select class="form-select" data-trigger name="users_id" id="users_id">
-                                    <option value="0">-</option>
-                                    @foreach ($users as $s)
-                                    @if (!in_array($s->id, $anggotaOptions))
-                                        <option value="{{ $s->id }}" {{old('users_id') == $s->id ?  'selected' : null}}>{{ $s->name }}
-                                        </option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div> --}}
-                            
-                            <div class="form-group">
-                                <label class="form-label" for="exampleInputText1">Nominal Simpanan Manasuka</label>
-                                <input type="text" class="form-control" id="simpanan_manasuka1" placeholder=" " name="simpanan_manasuka" value="{{$item->simpanan_manasuka}}">
-                            </div>
-                            
-                            
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
-                </div>
-            </div>
-            </div>
-        </form>
-        @endforeach
 
 
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
